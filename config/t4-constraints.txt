@@ -1,0 +1,6 @@
+# CUDA 12.4 PyTorch build supports the T4 and meets Soup's torch>=2.6 floor.
+# Install using --extra-index-url https://download.pytorch.org/whl/cu124
+torch==2.6.0+cu124
+transformers==5.16.1
+peft==0.20.0
+trl==0.29.0

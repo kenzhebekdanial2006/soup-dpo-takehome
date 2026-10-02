@@ -1,0 +1,10 @@
+{
+  "status": "FAILED_BEFORE_TRAINING",
+  "stage": "original notebook first code cell",
+  "source": "Error observed directly in user's open Colab browser window; not a captured runtime log",
+  "error": "AssertionError: Soup 0.75.2 supports Python 3.10–3.12; choose a compatible runtime version.",
+  "cause": "Colab kernel fails the original Python 3.10–3.12 guard. Visible Colab release notes indicate Python 3.13; exact runtime version was not printed by the original cell.",
+  "training_performed": false,
+  "fix": "Keep Colab kernel; create isolated Python 3.11, install a pinned CUDA PyTorch/Soup stack there and launch pipeline via that interpreter.",
+  "fix_validation": "Pending execution in Colab; local notebook cell syntax and bootstrap routing tests will be run."
+}

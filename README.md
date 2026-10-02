@@ -13,7 +13,8 @@ quality evidence. See [two-page report](reports/report.pdf),
 ## Run on free Colab T4
 
 1. Upload `notebooks/takehome_t4.ipynb` to Google Colab.
-2. Select **Runtime → Change runtime type → T4 GPU**, Python 3.10–3.12.
+2. Select **Runtime → Change runtime type → T4 GPU**. The notebook creates its
+   own Python 3.11 environment, including on Colab's Python 3.13 runtime.
 3. Run all cells. When prompted, upload the supplied `soup-dpo-takehome.zip`.
 4. The notebook installs the reviewed Soup release, runs all stages, and
    downloads a result ZIP even if a stage fails. Keep that ZIP and the completed
@@ -30,7 +31,8 @@ not guaranteed; an unavailable GPU is a blocked run, not a passing result.
 Equivalent Linux/T4 commands:
 
 ```bash
-python -m pip install -r requirements.txt
+python -m pip install torch==2.6.0+cu124 --extra-index-url https://download.pytorch.org/whl/cu124
+python -m pip install -r requirements.txt -c config/t4-constraints.txt --extra-index-url https://download.pytorch.org/whl/cu124
 python -m scripts.run_t4
 ```
 

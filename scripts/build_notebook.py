@@ -16,7 +16,8 @@ def cell(kind, source):
 def main():
     cells = [
         cell("markdown", """# Soup DPO: evidence on a free Colab T4
-Select **Runtime → Change runtime type → T4 GPU** (Python 3.10–3.12), then Run all.
+Select **Runtime → Change runtime type → T4 GPU**, then Run all.
+The notebook automatically creates Python 3.11 for Soup, even on Colab Python 3.13.
 Upload `soup-dpo-takehome.zip` when asked. No paid services or secret tokens.
 The run records errors and downloads a result ZIP even after failure.
 Save the executed notebook with outputs too. A successful run does not imply SHIP.
@@ -25,7 +26,7 @@ The source ZIP is excluded from the returned archive; model cache is never expor
         cell("code", """import os, sys, subprocess, zipfile
 from pathlib import Path
 from google.colab import files
-assert (3, 10) <= sys.version_info[:2] <= (3, 12), 'Soup 0.75.2 supports Python 3.10–3.12; choose a compatible runtime version.'
+print('Colab notebook kernel:', sys.version)
 uploaded = files.upload()
 assert len(uploaded) == 1, 'Upload only soup-dpo-takehome.zip'
 input_zip = next(iter(uploaded))
@@ -40,17 +41,28 @@ os.chdir(root)
 assert Path('scripts/run_t4.py').exists()
 print('Project:', root)
 """),
-        cell("code", """# Record installation separately. The actual resolved stack is frozen by the runner.
-install = subprocess.run([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt'],
-                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        cell("code", """# Colab's notebook kernel can be Python 3.13; Soup runs in isolated Python 3.11.
 Path('evidence').mkdir(exist_ok=True)
-Path('evidence/colab-install.raw.log').write_bytes(install.stdout)
-print(install.stdout.decode('utf-8', errors='replace'))
-assert install.returncode == 0, 'Installation failed; preserve the raw log. Do not report training as successful.'
+def bootstrap(command, name):
+    completed = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    Path(f'evidence/{name}.raw.log').write_bytes(completed.stdout)
+    print(completed.stdout.decode('utf-8', errors='replace'), flush=True)
+    if completed.returncode:
+        raise RuntimeError(f'{name} failed (exit {completed.returncode}); raw log retained.')
+bootstrap([sys.executable, '-m', 'pip', 'install', 'uv==0.9.3'], 'colab-install-uv')
+bootstrap([sys.executable, '-m', 'uv', 'python', 'install', '3.11'], 'colab-install-python')
+bootstrap([sys.executable, '-m', 'uv', 'venv', '--python', '3.11', '--seed', '.colab-venv'], 'colab-create-venv')
+PIPELINE_PYTHON = str((root / '.colab-venv/bin/python').resolve())
+bootstrap([PIPELINE_PYTHON, '-m', 'pip', 'install', 'torch==2.6.0+cu124',
+           '--extra-index-url', 'https://download.pytorch.org/whl/cu124'], 'colab-install-torch')
+bootstrap([PIPELINE_PYTHON, '-m', 'pip', 'install', '-r', 'requirements.txt',
+           '-c', 'config/t4-constraints.txt', '--extra-index-url',
+           'https://download.pytorch.org/whl/cu124'], 'colab-install-soup')
+bootstrap([PIPELINE_PYTHON, '-c', 'import sys,torch; print(sys.version); print(torch.__version__,torch.cuda.is_available()); print(torch.cuda.get_device_name(0))'], 'colab-check-runtime')
 """),
         cell("code", """# Each stage runs in a fresh process; no need to import the newly installed ML stack here.
 # Streaming parity, lr=0 control and the 400-row DPO run all execute on this T4.
-result = subprocess.run([sys.executable, '-m', 'scripts.run_t4'])
+result = subprocess.run([PIPELINE_PYTHON, '-m', 'scripts.run_t4'])
 print('Pipeline exit code:', result.returncode)
 print('All available logs and failure evidence are retained.')
 """),
@@ -66,7 +78,8 @@ print('Read reports/report.pdf and raw logs; do not infer learning from loss alo
 """),
         cell("code", """# Export even a failed attempt. Includes adapter + exact initialization when available.
 export_path = '/content/soup-dpo-results.zip'
-subprocess.run([sys.executable, '-m', 'scripts.package', '--include-weights', '--output', export_path], check=True)
+export_python = globals().get('PIPELINE_PYTHON', sys.executable)
+subprocess.run([export_python, '-m', 'scripts.package', '--include-weights', '--output', export_path], check=True)
 files.download(export_path)
 """),
         cell("markdown", """## Before submission
