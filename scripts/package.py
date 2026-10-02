@@ -9,7 +9,7 @@ from pathlib import Path
 def package(output, include_weights=False):
     root = Path.cwd().resolve()
     output = Path(output).resolve()
-    include = [root / name for name in ["README.md", "requirements.txt", "pyproject.toml", ".gitignore", ".github",
+    include = [root / name for name in ["README.md", "requirements.txt", "pyproject.toml", ".gitignore", ".gitattributes", ".github",
                                         "config", "data", "docs", "scripts", "tests", "notebooks", "reports", "evidence"]]
     if include_weights:
         include += [root / "outputs" / "adapter", root / "outputs" / "control_adapter"]

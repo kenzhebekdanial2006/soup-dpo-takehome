@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.pdf -text
+*.raw.log -text
+*.raw.csv -text
+*.timestamped.log -text
+*.safetensors -text
+*.zip -text
