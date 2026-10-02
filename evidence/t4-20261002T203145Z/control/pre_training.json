@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-10-02T20:34:01.152+00:00",
+  "initial_adapter_sha256": "9652e9df8de43381bdbf679db1eee5db792bd3340f674c0a15147bb8050a20ff",
+  "trainable_count": 1089536,
+  "trainable_dtypes": [
+    "torch.float32"
+  ],
+  "stream_runtime": {
+    "n_layers": 28,
+    "buffers": 2,
+    "buffer_bytes": 187191296,
+    "large_buffer_bytes": 0,
+    "store_bytes": 2620678144,
+    "pinned": true,
+    "tier": "ram",
+    "disk_bytes": 0,
+    "layer_loads": 0,
+    "large_loads": 0,
+    "device": "cuda",
+    "total_params": 1543714304
+  },
+  "fp16": true,
+  "bf16": false,
+  "prepared_rows": 400,
+  "reference_instance": false,
+  "reference_adapter": null
+}

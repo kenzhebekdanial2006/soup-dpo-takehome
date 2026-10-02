@@ -1,0 +1,17 @@
+{
+  "started": "2026-10-02T20:31:46.033+00:00",
+  "argv": [
+    "/content/soup-dpo-takehome/.colab-venv/bin/python",
+    "-m",
+    "scripts.environment",
+    "--output",
+    "evidence/t4-20261002T203145Z/environment.json"
+  ],
+  "finished": "2026-10-02T20:31:49.435+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0
+  ],
+  "raw_log_sha256": "a323c7e5edc58b991ad70b22ab4bcb2e92cf3cfeb35df5f93762225c9b216efb",
+  "passed": true
+}

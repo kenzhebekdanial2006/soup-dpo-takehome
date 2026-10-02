@@ -22,6 +22,7 @@ def create_report(directory):
     evaluation = read(directory, "evaluation.json")
     soup_ship = read(directory, "soup_ship.json")
     negative = read(directory / "control", "verification.json")
+    observed_memory = read(directory, "memory_observed.json")
     gates = {
         "t4_run_completed": status.get("completed", False),
         "reference_stable": bool(trained and trained.get("reference_stable")),
@@ -46,7 +47,7 @@ def create_report(directory):
                    "500 template-defined fictional tickets authored with Codex: 400 train/100 heldout, grouped by scenario, 10 heldout groups. "
                    "Shared policy/response templates remain a shortcut risk; no real tickets or independent labels."))
     if budget:
-        memory = f"Pre-run planned upper peak: {budget['planned_peak_upper_GiB']:.3f} GiB. "
+        memory = f"First-order pre-run plan (not a hard bound): {budget['planned_peak_upper_GiB']:.3f} GiB. "
         memory += f"Base {budget['base_parameters']:,} parameters ({budget['base_resident_fp16_bytes']/1024**3:.3f} GiB resident alternative); "
         memory += f"host decoder store {budget['host_decoder_store_fp16_bytes']/1024**3:.3f} GiB; LoRA {budget['lora_parameters']:,} parameters. "
         c = budget["components"]
@@ -64,7 +65,16 @@ def create_report(directory):
             memory += "Actual peak: NOT MEASURED. Gap: NOT COMPUTABLE. "
         memory += "Plan assumes fully padded length 512 and conservative logit temporaries; real lengths/lifetimes differ. "
         memory += "Reserved includes allocator slack; nvidia-smi adds driver/other processes and 1 s sampling misses short peaks. "
-        memory += "Break down the observed gap from raw samples and runtime stats; no attribution to a single cause is claimed."
+        if observed_memory:
+            lengths = observed_memory["audited_training_full_tokens"]
+            memory += f"Audited train lengths {lengths['min']}-{lengths['max']} vs planned 512; post-hoc length-only plan {observed_memory['post_hoc_length_sensitivity_plan_GiB']:.3f} GiB. "
+            peak = observed_memory["training_window_nvidia_smi_peak_GiB"]
+            if peak is not None:
+                memory += f"Main train command's sampled device peak {peak:.3f} GiB (parity excluded). "
+                memory += f"Device peak exceeded plan by {peak-budget['planned_peak_upper_GiB']:.3f} GiB. "
+            memory += "The fixed 1 GiB cache/context allowance is not a hard bound; reserved blocks can exceed it. Peaks are not simultaneous; no single-cause attribution is proved."
+        else:
+            memory += "No attribution to a single cause is claimed."
     else:
         memory = "No model snapshot or T4 training peak measured yet. scripts/memory_budget.py computes weights, two buffers, tied embedding, "
         memory += "FP32 LoRA/grad/Adam, checkpoint boundaries, recomputation, paired logits and sequential no-grad reference BEFORE training. "
@@ -77,6 +87,8 @@ def create_report(directory):
     if verified:
         verification += f"Observed passed={verified['passed']}; changed B fraction={verified['tensor_delta'].get('changed_B_fraction', 0):.3f}; "
         verification += f"functional delta={verified['functional_change']['max_token_logp_delta']:.6g}, noise={verified['functional_change']['baseline_repeat_noise']:.6g}. "
+    if trained:
+        verification += f"Actual optimizer steps={trained['actual_optimizer_steps']}; reference delta={trained['reference_max_delta']:.6g}. "
     else:
         verification += "Real trained-adapter output: UNRUN. "
     verification += f"T4 streamed-vs-resident DPO backward: {parity['passed'] if parity else 'UNRUN'}; lr=0 control: "
@@ -84,7 +96,7 @@ def create_report(directory):
     verification += "Tensor/output checks miss wrong gradients and bad labels; parity covers three batches at this stack/model/shape, not all steps."
     report.append(("Prove training", verification))
     failures = [
-        ("Inert saved adapter", "Round-trip keys, tensor deltas, enabled/disabled probes; data doctor/preflight cannot prove it. Historical .inner. defect is fixed upstream; our artifact still needs checking."),
+        ("Inert saved adapter", "Round-trip keys, tensor deltas, enabled/disabled probes; data doctor/preflight cannot prove it. Historical .inner. defect is fixed upstream; our saved artifact has an independent reload check."),
         ("Wrong streamed gradients", "Compare all LoRA gradients to resident DPO with deliberately nonzero B. Forward/loss equality is insufficient. NF4 aliasing defect does not apply to our quantization=none; no NF4 correctness claim."),
         ("Reference drift / extra model", "Capture ref logps before/after; record ref instance/ref-adapter and runtime buffers. Same frozen base must be reused. Soup's fit gate does not establish a stationary reference."),
         ("Masking, EOS, truncation", "Run doctor on chat projection, lint on actual DPO pairs; audit all 500 tokenized pairs and inspect prepared TRL IDs. Chat doctor does not prove the DPO trainer's masking."),
@@ -94,9 +106,14 @@ def create_report(directory):
     ]
     report.append(("Silent failures: check and Soup coverage", " ".join(f"{name}: {details}" for name, details in failures)))
     outcome = f"Soup ship output: {'recorded in soup_ship.json' if soup_ship else 'UNRUN'}. "
+    if soup_ship:
+        outcome += f"Numeric gate returned {soup_ship['decision']}; this does not override the final DON'T SHIP call. "
     if evaluation:
+        outcome += f"Synthetic paired accuracy {verified['base_accuracy_sum']:.2f} to {verified['tuned_accuracy_sum']:.2f}; "
         outcome += f"Heldout paired accuracy delta {evaluation['paired_accuracy_delta']:+.3f}; group-bootstrap 95% interval {evaluation['cluster_bootstrap_95_ci']}. "
-    outcome += "Required before SHIP: complete and pass the T4 evidence chain; obtain independently annotated real Russian tickets with "
+    if read(directory, "soup_data_lint.json"):
+        outcome += "Soup near-duplicate lint was skipped (datasketch absent); chat doctor reported missing generation markers (MINOR). Exact/group checks and actual TRL collator tests are separate evidence. "
+    outcome += "Required before SHIP: retain a passing T4 evidence chain; obtain independently annotated real Russian tickets with "
     outcome += "scenario separation; manually inspect generated replies and safety errors; run broader Russian/general regression tests and seeds; "
     outcome += "resolve every MAJOR diagnostic. Package this run's weights with its snapshot/config/data hashes. No failed run is removed."
     report.append(("Verdict and required changes", outcome))
@@ -119,7 +136,12 @@ def create_report(directory):
                    "Corrected by checking source: doctor rejects DPO pairs; use lint plus chat projection; T4 precision is fp16; never report pending "
                    "GPU checks as passed. Local tests and T4 evidence must be distinguished. The applicant has not independently reviewed or run this "
                    "work unless their review is separately recorded; no applicant verification is invented."))
-    write_json(directory / "verdict.json", {"timestamp": utc_now(), "verdict": verdict, "gates": gates})
+    recorded = read(directory, "verdict.json")
+    if recorded:
+        if recorded["verdict"] != verdict or recorded["gates"] != gates:
+            raise ValueError("Existing verdict disagrees with current facts; preserve it and use a new evidence directory")
+    else:
+        write_json(directory / "verdict.json", {"timestamp": utc_now(), "verdict": verdict, "gates": gates})
     return report
 
 

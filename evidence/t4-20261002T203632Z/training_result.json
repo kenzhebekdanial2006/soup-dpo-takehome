@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-10-02T20:45:51.600+00:00",
+  "global_steps": 100,
+  "gradient_events": 100,
+  "reference_stable": true,
+  "actual_optimizer_steps": 100,
+  "reference_max_delta": 0.0,
+  "setup_peak_allocated_bytes": 697143296,
+  "setup_peak_reserved_bytes": 710934528,
+  "training_peak_allocated_bytes": 2165838336,
+  "training_peak_reserved_bytes": 6914310144,
+  "metrics": {
+    "train_runtime": 353.56,
+    "train_samples_per_second": 1.131,
+    "train_steps_per_second": 0.283,
+    "total_flos": 1408827124039680.0,
+    "train_loss": 0.20600437114946543
+  },
+  "control_lr_zero": false,
+  "initial_adapter_sha256": "9652e9df8de43381bdbf679db1eee5db792bd3340f674c0a15147bb8050a20ff",
+  "final_adapter_sha256": "31ac804ecb3a870878f0ea7b01186bb665619111c8863f299a49610fa13ec200"
+}

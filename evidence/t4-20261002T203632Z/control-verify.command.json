@@ -1,0 +1,23 @@
+{
+  "started": "2026-10-02T20:39:02.633+00:00",
+  "argv": [
+    "/content/soup-dpo-takehome/.colab-venv/bin/python",
+    "-m",
+    "scripts.verify_training",
+    "--initial",
+    "evidence/t4-20261002T203632Z/control/initial_adapter",
+    "--adapter",
+    "outputs/control_adapter",
+    "--limit",
+    "4",
+    "--output",
+    "evidence/t4-20261002T203632Z/control/verification.json"
+  ],
+  "finished": "2026-10-02T20:39:30.765+00:00",
+  "returncode": 2,
+  "accepted_exit_codes": [
+    2
+  ],
+  "raw_log_sha256": "89c49023a529ebfbbf361932aac5f206efb657deba24364bb0809c9684c1fdd7",
+  "passed": true
+}

@@ -1,0 +1,28 @@
+{
+  "started": "2026-10-02T20:32:33.705+00:00",
+  "argv": [
+    "soup",
+    "data",
+    "doctor",
+    "data/chat_for_doctor.jsonl",
+    "--model",
+    "models/base",
+    "--max-length",
+    "512",
+    "--sample",
+    "400",
+    "--train-on-eot",
+    "--show-mask",
+    "2",
+    "--output",
+    "evidence/t4-20261002T203145Z/soup_data_doctor.json"
+  ],
+  "finished": "2026-10-02T20:32:40.470+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0,
+    2
+  ],
+  "raw_log_sha256": "d9f5ed990b8e06d765718c8aac57f6e91d6a2a8164dd6b48944ba6a8880725f2",
+  "passed": true
+}

@@ -1,0 +1,22 @@
+{
+  "decision": "SHIP",
+  "task_win": {
+    "mode": "metric",
+    "base": 0.87,
+    "tuned": 1.0,
+    "won": true
+  },
+  "benchmark_deltas": [
+    {
+      "name": "tiny_general_forced_choice_4_NOT_mmlu",
+      "base": 1.0,
+      "tuned": 1.0,
+      "delta": 0.0,
+      "regressed": false
+    }
+  ],
+  "failed_rule": null,
+  "forgetting_threshold": 0.05,
+  "soup_version": "0.75.2",
+  "noise_floor": null
+}

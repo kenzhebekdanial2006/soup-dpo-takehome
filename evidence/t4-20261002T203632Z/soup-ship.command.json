@@ -1,0 +1,21 @@
+{
+  "started": "2026-10-02T20:47:13.417+00:00",
+  "argv": [
+    "soup",
+    "ship",
+    "--evidence",
+    "evidence/t4-20261002T203632Z/ship_evidence.json",
+    "--output",
+    "evidence/t4-20261002T203632Z/soup_ship.json",
+    "--forgetting-threshold",
+    "0.05"
+  ],
+  "finished": "2026-10-02T20:47:14.327+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0,
+    2
+  ],
+  "raw_log_sha256": "76abccf61b7491d3d7bb4f5fb5834313da9b97d73b76f64627fcdea3b306dd9a",
+  "passed": true
+}

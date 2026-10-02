@@ -4,10 +4,22 @@ An evidence-first DPO run for Russian support preferences: actual Soup layer
 streaming, an independent memory estimate, saved-adapter verification, a real
 `lr=0` negative control, and streamed-vs-resident gradient comparison.
 
-**Current status:** the project is prepared; the required Colab T4 run is pending.
-No T4 training results are claimed. Final deployment call: **DON'T SHIP** until
-the evidence chain passes and real-domain validation replaces synthetic-only
-quality evidence. See [two-page report](reports/report.pdf),
+**Current status:** completed on a real Colab Tesla T4, run
+[`t4-20261002T203632Z`](evidence/t4-20261002T203632Z/status.json).
+100 actual optimizer steps; all 112 adapter tensors changed; ordinary PEFT reload,
+adapter-disabled restoration and the real `lr=0` control passed their checks.
+Streamed/resident gradients were bit-identical on three batches with deterministic
+math attention. All 18 engineering tests passed on T4.
+
+Synthetic heldout preference accuracy: 87% to 100% (100 rows, ten independent
+groups; paired delta 0.13, group-bootstrap 95% CI [0.00, 0.36]). PyTorch training
+peak: 2.017 GiB allocated / 6.439 GiB reserved; sampled main-command device peak:
+6.651 GiB. The original 3.815 GiB memory plan underestimated reserved/device
+footprint; the report explains the assumptions and gap without changing it.
+
+Soup's numeric gate returned SHIP; final deployment call: **DON'T SHIP**, because
+synthetic templates and four general questions cannot validate deployment quality.
+See [two-page report](reports/report.pdf),
 [report source](reports/report.md), and [AI disclosure](docs/AI_USAGE.md).
 
 ## Run on free Colab T4
@@ -87,15 +99,16 @@ model/config/stack/T4; it does not validate NF4 or other hardware. See
 - `evidence/<run-id>/`: raw timestamped logs, raw GPU output, versions, hashes,
   errors, measurements, verification output and final verdict.
 - `scripts/verify_training.py`: standalone Part 2 verification (exit 2 for failed checks).
-- `notebooks/takehome_t4.ipynb`: runnable notebook; submit the executed copy too.
+- `notebooks/takehome_t4.ipynb`: clean runnable notebook.
+- `notebooks/takehome_t4_executed.ipynb`: downloaded Colab notebook with actual outputs and repair cells.
+- [Final release](https://github.com/kenzhebekdanial2006/soup-dpo-takehome/releases/tag/t4-evidence-v1): full result archive including adapter weights and initialization snapshots.
 - `config/soup.yaml` and `scripts/`: complete reproducible code.
 - Report includes one paragraph on surprises/remaining concerns and AI use.
 
-Missing T4 evidence is stated explicitly in the initial report. Once a real run
-finishes, the report is regenerated from that run, including failures. Before
-submission, update the current-status line above with the actual run ID and
-attach the completed notebook and result archive; give the company access to
-the private repository.
+Failed attempts and precision diagnostics remain in `evidence/`; see
+[experiment history](docs/EXPERIMENTS.md). The final report is regenerated from
+the completed run, with a separately labeled post-run memory analysis.
+Give the company access to this private repository before submitting its link.
 
 ## Local verification
 

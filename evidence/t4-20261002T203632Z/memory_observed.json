@@ -1,0 +1,30 @@
+{
+  "kind": "POST-RUN ANALYSIS; original memory_budget.json remains unchanged",
+  "timestamp": "2026-10-02T20:54:38.566+00:00",
+  "training_command_window": {
+    "started": "2026-10-02T20:39:30.767+00:00",
+    "finished": "2026-10-02T20:45:55.038+00:00"
+  },
+  "pre_run_plan_GiB": 3.8146276473999023,
+  "training_allocated_peak_GiB": 2.017094135284424,
+  "training_reserved_peak_GiB": 6.439453125,
+  "training_window_nvidia_smi_peak_GiB": 6.6513671875,
+  "training_window_gpu_samples": 372,
+  "audited_training_full_tokens": {
+    "min": 211,
+    "max": 235,
+    "mean": 221.92
+  },
+  "post_hoc_length_sensitivity_plan_GiB": 2.6323447227478027,
+  "post_hoc_length_sensitivity_delta_GiB": -1.1822829246520996,
+  "interpretation": [
+    "The pre-run formula assumed padded length 512; audited real sequences are substantially shorter.",
+    "Length sensitivity is calculated after the run, not a revised pre-run prediction or measured allocation.",
+    "Allocated, reserved and driver-visible peaks measure different things and need not occur simultaneously.",
+    "CUDA context and cached blocks contribute to nvidia-smi/reserved, but not to torch live allocated bytes.",
+    "The fixed 1 GiB workspace/fragmentation allowance is a planning assumption, not a hard upper bound.",
+    "Only the main training command window is sampled here; the two-model parity probe is excluded.",
+    "Audited full token lengths are a tokenizer diagnostic; exact TRL runtime padding may differ by EOS handling.",
+    "One-second GPU sampling can miss brief peaks; no single causal attribution is proved."
+  ]
+}

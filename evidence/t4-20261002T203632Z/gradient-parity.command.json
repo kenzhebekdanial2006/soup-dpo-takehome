@@ -1,0 +1,18 @@
+{
+  "started": "2026-10-02T20:37:37.455+00:00",
+  "argv": [
+    "/content/soup-dpo-takehome/.colab-venv/bin/python",
+    "-m",
+    "scripts.gradient_parity",
+    "--deterministic-math",
+    "--output",
+    "evidence/t4-20261002T203632Z/gradient_parity.json"
+  ],
+  "finished": "2026-10-02T20:38:19.336+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0
+  ],
+  "raw_log_sha256": "435a3b29841863d53257d30a30777c46c922abeefc0059f9c25e7ebf2a7eb59a",
+  "passed": true
+}

@@ -78,13 +78,23 @@ def main():
     })
     first_batch = trainer.data_collator([prepared[0]])
     first_batch = {k: v.to("cuda") if hasattr(v, "to") else v for k, v in first_batch.items()}
-    reference_before = [v.detach().cpu() for v in trainer.compute_ref_log_probs(first_batch)]
+    # Accelerate wraps forward during train() and converts AMP outputs to FP32.
+    # Capture at on_train_begin, after that wrapper exists, so both probes use
+    # the same numerical path; comparing pre-prepare fp16 to post-prepare fp32
+    # can falsely report reference drift even when lr=0 leaves every byte intact.
+    reference_before = []
     gradient_events = []
     actual_optimizer_steps = []
     optimizer_hook = []
 
     class EvidenceCallback(TrainerCallback):
         def on_train_begin(self, callback_args, state, control, **kwargs):
+            ref = trainer.compute_ref_log_probs(first_batch)
+            reference_before.extend(v.detach().cpu() for v in ref)
+            write_json(evidence / "reference_before.json", {
+                "timestamp": utc_now(), "phase": "on_train_begin_after_accelerate_prepare",
+                "dtypes": [str(v.dtype) for v in ref], "logps": [v.tolist() for v in reference_before],
+            })
             optimizer = kwargs["optimizer"]
             optimizer = getattr(optimizer, "optimizer", optimizer)
             if not hasattr(optimizer, "register_step_post_hook"):
@@ -126,6 +136,10 @@ def main():
         torch.cuda.synchronize()
         train_peak, train_reserved_peak = torch.cuda.max_memory_allocated(), torch.cuda.max_memory_reserved()
         reference_after = [v.detach().cpu() for v in trainer.compute_ref_log_probs(first_batch)]
+        write_json(evidence / "reference_after.json", {
+            "timestamp": utc_now(), "phase": "after_train_same_prepared_model",
+            "dtypes": [str(v.dtype) for v in reference_after], "logps": [v.tolist() for v in reference_after],
+        })
         reference_deltas = [(a - b).abs().max().item() for a, b in zip(reference_before, reference_after, strict=True)]
         reference_stable = max(reference_deltas) <= 1e-4
         trainer.save_model(cfg.output)

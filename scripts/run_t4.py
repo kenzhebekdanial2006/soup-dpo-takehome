@@ -95,6 +95,7 @@ def main():
         run_command(py + ["scripts.verify_training", "--initial", str(directory / "initial_adapter"), "--adapter", "outputs/adapter", "--output", str(directory / "verification.json")], directory, "verify-training")
         run_command(py + ["scripts.evaluate", "--verification", str(directory / "verification.json"), "--evidence", str(directory)], directory, "evaluate")
         run_command(["soup", "ship", "--evidence", str(directory / "ship_evidence.json"), "--output", str(directory / "soup_ship.json"), "--forgetting-threshold", "0.05"], directory, "soup-ship", allowed=(0, 2))
+        run_command(py + ["scripts.analyze_memory", "--evidence", str(directory)], directory, "memory-after-analysis")
         status.update(status="COMPLETED", completed=True)
     except BaseException as exc:
         status.update(status="FAILED", error=f"{type(exc).__name__}: {exc}")

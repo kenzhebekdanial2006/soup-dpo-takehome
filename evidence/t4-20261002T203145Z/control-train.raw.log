@@ -1,0 +1,55 @@
+Loading tokenizer: ./models/base
+╭────────────────────── Layer streaming disk pre-flight ───────────────────────╮
+│ HF/local source: 3.09 GB                                                     │
+│ Soup materialized copy: 0.00 GB (no write required)                          │
+│ Layer-shard cache: 3.09 GB (reusable)                                        │
+│ Projected total on disk: 6.17 GB                                             │
+│ Additional writes before training: 0.00 GB                                   │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Preparing layer shards -> /root/.soup/layer-stream/models__base
+╭─────────────────────────── training.stream_layers ───────────────────────────╮
+│ Layer streaming BETA — arch qwen2, tier ram                                  │
+│   base store   2.62 GB across 28 layers (pinned)                             │
+│   VRAM buffers 2 x 94 MB + 1 x 0 MB large-layer slot = 187 MB                │
+│   resident     467 MB extras + adapters                                      │
+│   peak VRAM    ~3.00 GB at batch 1 x seq 512 (2 rows — chosen+rejected are   │
+│ one concatenated tensor) (logits 2.18 GB)                                    │
+│   free VRAM    15.51 GB                                                      │
+│   forecast     1666-2450 tok/s — a compute-bound bound, not a promise        │
+│                (from 22.69 TFLOPS measured on this card now using float16 @  │
+│ 900 MHz)                                                                     │
+│   ! accumulating 4x at batch 1: the base is re-read once per micro-batch.    │
+│ Per token that is free, but reaching effective batch 4 by raising            │
+│ training.batch_size instead measured ~2.5x faster. Accumulation holds peak   │
+│ VRAM flat, so raise batch_size while the budget above allows, then           │
+│ accumulate for the rest.                                                     │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Layer streaming is BETA: slower than resident training, but this model may not 
+run resident on this card at all.
+expandable_segments allocator hint not enabled: CUDA was already initialised 
+before Soup could set it — the allocator reads PYTORCH_CUDA_ALLOC_CONF once, at 
+context creation
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Layer streaming ready: 28 layers, 2.62 GB pinned RAM store, 2 x 94 MB decoder 
+buffers + 1 x 0 MB large-layer slot
+LoRA applied: 1,089,536 trainable / 1,543,714,304 total (0.07%)
+Tokenizing train dataset:   0%|          | 0/400 [00:00<?, ? examples/s]Tokenizing train dataset:  12%|█▏        | 47/400 [00:00<00:00, 457.57 examples/s]Tokenizing train dataset:  27%|██▋       | 109/400 [00:00<00:00, 544.69 examples/s]Tokenizing train dataset:  42%|████▎     | 170/400 [00:00<00:00, 569.94 examples/s]Tokenizing train dataset:  57%|█████▊    | 230/400 [00:00<00:00, 579.44 examples/s]Tokenizing train dataset:  72%|███████▏  | 288/400 [00:00<00:00, 574.63 examples/s]Tokenizing train dataset:  94%|█████████▎| 374/400 [00:00<00:00, 566.89 examples/s]Tokenizing train dataset: 100%|██████████| 400/400 [00:00<00:00, 537.35 examples/s]
+[transformers] The model is already on multiple devices. Skipping the move to device specified in `args`.
+Map:   0%|          | 0/400 [00:00<?, ? examples/s]Map: 100%|██████████| 400/400 [00:00<00:00, 4627.00 examples/s]
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'bos_token_id': None, 'pad_token_id': 151643}.
+  0%|          | 0/2 [00:00<?, ?it/s] 50%|█████     | 1/2 [00:04<00:04,  4.49s/it]                                             {'loss': '0.6931', 'grad_norm': '2.821', 'learning_rate': '0', 'entropy': '1.194', 'num_tokens': '1755', 'logits/chosen': '-2.397', 'logits/rejected': '-2.31', 'mean_token_accuracy': '0.5815', 'rewards/chosen': '0', 'rewards/rejected': '0', 'rewards/accuracies': '0', 'rewards/margins': '0', 'logps/chosen': '-113.1', 'logps/rejected': '-135.5', 'epoch': '0.01'}
+ 50%|█████     | 1/2 [00:04<00:04,  4.49s/it]{'timestamp': '2026-10-02T20:34:06.495+00:00', 'step': 1, 'metrics': {'loss': 0.6931471824645996, 'grad_norm': 2.8212671279907227, 'learning_rate': 0.0, 'entropy': 1.19380983710289, 'num_tokens': 1755.0, 'logits/chosen': -2.3969372614441466, 'logits/rejected': -2.310434592991508, 'mean_token_accuracy': 0.5814972668886185, 'rewards/chosen': 0.0, 'rewards/rejected': 0.0, 'rewards/accuracies': 0.0, 'rewards/margins': 0.0, 'logps/chosen': -113.07411193847656, 'logps/rejected': -135.5018196105957, 'epoch': 0.01}}
+100%|██████████| 2/2 [00:07<00:00,  3.81s/it]                                             {'loss': '0.6931', 'grad_norm': '2.441', 'learning_rate': '0', 'entropy': '1.107', 'num_tokens': '3544', 'logits/chosen': '-2.397', 'logits/rejected': '-2.316', 'mean_token_accuracy': '0.631', 'rewards/chosen': '0', 'rewards/rejected': '0', 'rewards/accuracies': '0', 'rewards/margins': '0', 'logps/chosen': '-111.5', 'logps/rejected': '-142.1', 'epoch': '0.02'}
+100%|██████████| 2/2 [00:07<00:00,  3.81s/it]{'timestamp': '2026-10-02T20:34:09.822+00:00', 'step': 2, 'metrics': {'loss': 0.6931471824645996, 'grad_norm': 2.4409561157226562, 'learning_rate': 0.0, 'entropy': 1.1069017946720123, 'num_tokens': 3544.0, 'logits/chosen': -2.396895244794507, 'logits/rejected': -2.315882412387762, 'mean_token_accuracy': 0.6309603899717331, 'rewards/chosen': 0.0, 'rewards/rejected': 0.0, 'rewards/accuracies': 0.0, 'rewards/margins': 0.0, 'logps/chosen': -111.5225658416748, 'logps/rejected': -142.14401245117188, 'epoch': 0.02}}
+                                             {'train_runtime': '8.042', 'train_samples_per_second': '0.995', 'train_steps_per_second': '0.249', 'train_loss': '0.6931', 'epoch': '0.02'}
+100%|██████████| 2/2 [00:08<00:00,  3.81s/it]{'timestamp': '2026-10-02T20:34:10.045+00:00', 'step': 2, 'metrics': {'train_runtime': 8.0423, 'train_samples_per_second': 0.995, 'train_steps_per_second': 0.249, 'total_flos': 28192922726400.0, 'train_loss': 0.6931471824645996, 'epoch': 0.02}}
+100%|██████████| 2/2 [00:08<00:00,  4.02s/it]
+{'timestamp': '2026-10-02T20:34:10.543+00:00', 'global_steps': 2, 'gradient_events': 2, 'reference_stable': False, 'actual_optimizer_steps': 2, 'reference_max_delta': 0.02032470703125, 'setup_peak_allocated_bytes': 1106342912, 'setup_peak_reserved_bytes': 1168113664, 'training_peak_allocated_bytes': 2139596288, 'training_peak_reserved_bytes': 5442109440, 'metrics': {'train_runtime': 8.0423, 'train_samples_per_second': 0.995, 'train_steps_per_second': 0.249, 'total_flos': 28192922726400.0, 'train_loss': 0.6931471824645996}, 'control_lr_zero': True, 'initial_adapter_sha256': '9652e9df8de43381bdbf679db1eee5db792bd3340f674c0a15147bb8050a20ff', 'final_adapter_sha256': '9652e9df8de43381bdbf679db1eee5db792bd3340f674c0a15147bb8050a20ff'}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/content/soup-dpo-takehome/scripts/train.py", line 160, in <module>
+    main()
+  File "/content/soup-dpo-takehome/scripts/train.py", line 148, in main
+    raise RuntimeError("DPO reference changed during training")
+RuntimeError: DPO reference changed during training

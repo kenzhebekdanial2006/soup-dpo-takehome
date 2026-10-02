@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-10-02T20:47:14.675+00:00",
+  "verdict": "DON'T SHIP",
+  "gates": {
+    "t4_run_completed": true,
+    "reference_stable": true,
+    "adapter_changed_and_active": true,
+    "gradient_parity": true,
+    "no_op_control_rejected": true,
+    "real_domain_validation": false,
+    "broad_forgetting_validation": false
+  }
+}

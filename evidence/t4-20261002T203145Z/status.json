@@ -1,0 +1,8 @@
+{
+  "run": "t4-20261002T203145Z",
+  "started": "2026-10-02T20:31:45.246+00:00",
+  "status": "FAILED",
+  "completed": false,
+  "error": "RuntimeError: control-train exited 1; raw log retained at evidence/t4-20261002T203145Z/control-train.raw.log",
+  "finished": "2026-10-02T20:34:12.575+00:00"
+}

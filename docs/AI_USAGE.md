@@ -45,3 +45,19 @@ for all 112 trainable tensors on three real DPO batches and zero resident-repeat
 noise, using the original tolerances. The pipeline now uses those settings for
 parity, training and scoring. This does not establish a streaming defect, and
 the failed/default-kernel probes are retained alongside the passing diagnostic.
+
+The lr=0 control completed two real optimizer steps with byte-identical adapter
+weights, exposing another invalid comparison: reference probabilities were
+captured before Accelerate's AMP forward wrapper and compared to its FP32-converted
+outputs after training. The initial reference probe now runs at on_train_begin,
+after preparation and before updates; both probes record their phase and dtype.
+The reference-stability threshold remains unchanged.
+
+Codex completed the real T4 run `t4-20261002T203632Z` in the applicant's open
+Colab, downloaded its executed notebook and result ZIP, verified raw-log hashes,
+and generated the final two-page report. Training, saved-adapter verification,
+unchanged reference and the deliberately rejected zero-LR control are recorded;
+all 18 engineering tests passed on T4. Post-run memory sensitivity was added
+locally and clearly labeled; the original estimate, raw logs and failed attempts
+were preserved. Soup's numeric SHIP was rejected as a deployment decision because
+quality evidence is synthetic and the general regression set has four questions.

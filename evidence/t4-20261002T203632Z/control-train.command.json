@@ -1,0 +1,18 @@
+{
+  "started": "2026-10-02T20:38:19.342+00:00",
+  "argv": [
+    "/content/soup-dpo-takehome/.colab-venv/bin/python",
+    "-m",
+    "scripts.train",
+    "--control",
+    "--evidence",
+    "evidence/t4-20261002T203632Z/control"
+  ],
+  "finished": "2026-10-02T20:39:02.632+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0
+  ],
+  "raw_log_sha256": "916d19ee798df6241ba9655309d543a44f78b11397626fc2dbb2406e250d1767",
+  "passed": true
+}

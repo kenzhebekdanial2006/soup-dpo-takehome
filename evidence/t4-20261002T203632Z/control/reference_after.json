@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-10-02T20:38:59.122+00:00",
+  "phase": "after_train_same_prepared_model",
+  "dtypes": [
+    "torch.float32",
+    "torch.float32"
+  ],
+  "logps": [
+    [
+      -112.81657409667969
+    ],
+    [
+      -150.52032470703125
+    ]
+  ]
+}

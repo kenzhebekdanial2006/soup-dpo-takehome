@@ -1,0 +1,20 @@
+{
+  "task": {
+    "mode": "metric",
+    "base": 0.87,
+    "tuned": 1.0
+  },
+  "benchmarks": {
+    "tiny_general_forced_choice_4_NOT_mmlu": {
+      "base": 1.0,
+      "tuned": 1.0
+    }
+  },
+  "provenance": {
+    "timestamp": "2026-10-02T20:47:11.449+00:00",
+    "config_sha": "1fe28cb76bed3940948a2a2b2a96a955ee45cc10a708a7eb74054dda68dbc41a",
+    "verification_sha": "9e477df4a45b92d53f28ae6af804bdbd4effc206158a20bdd31c7d306f8df216",
+    "task_metric": "Response-only sum-logp preference accuracy on synthetic heldout",
+    "general_metric": "4-question response likelihood, not broad forgetting evidence"
+  }
+}
