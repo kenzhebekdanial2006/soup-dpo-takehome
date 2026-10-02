@@ -1,0 +1,13 @@
+{
+  "started": "2026-10-02T20:08:56.414+00:00",
+  "argv": [
+    "nvidia-smi"
+  ],
+  "finished": "2026-10-02T20:08:56.577+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0
+  ],
+  "raw_log_sha256": "50392bb5c6d0e46ee28c709a01cef8fdbfc4538a238b47d489c84819dbd72ab6",
+  "passed": true
+}

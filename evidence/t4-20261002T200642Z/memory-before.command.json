@@ -1,0 +1,17 @@
+{
+  "started": "2026-10-02T20:07:25.331+00:00",
+  "argv": [
+    "/content/soup-dpo-takehome/.colab-venv/bin/python",
+    "-m",
+    "scripts.memory_budget",
+    "--output",
+    "evidence/t4-20261002T200642Z/memory_budget.json"
+  ],
+  "finished": "2026-10-02T20:07:25.372+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0
+  ],
+  "raw_log_sha256": "5739210fc7ed75999712682ba734d94fa1cd9fb4aabe0daf201293ad0d1bda1a",
+  "passed": true
+}

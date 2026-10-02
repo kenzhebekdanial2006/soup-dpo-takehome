@@ -76,8 +76,12 @@ bootstrap([PIPELINE_PYTHON, '-c', 'import sys,torch; print(sys.version); print(t
 """),
         cell("code", """# Each stage runs in a fresh process; no need to import the newly installed ML stack here.
 # Streaming parity, lr=0 control and the 400-row DPO run all execute on this T4.
-result = subprocess.run([PIPELINE_PYTHON, '-m', 'scripts.run_t4'])
-print('Pipeline exit code:', result.returncode)
+with subprocess.Popen([PIPELINE_PYTHON, '-m', 'scripts.run_t4'], stdout=subprocess.PIPE,
+                      stderr=subprocess.STDOUT, text=True, bufsize=1) as process:
+    for line in process.stdout:
+        print(line, end='', flush=True)
+    pipeline_exit_code = process.wait()
+print('Pipeline exit code:', pipeline_exit_code)
 print('All available logs and failure evidence are retained.')
 """),
         cell("code", """import json

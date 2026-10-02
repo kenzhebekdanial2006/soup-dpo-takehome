@@ -25,8 +25,24 @@ def test_python_313_kernel_bootstraps_311_training(tmp_path, monkeypatch):
         calls.append(command)
         return SimpleNamespace(stdout=b"test bootstrap output\n", returncode=0)
 
+    class Process:
+        stdout = ["live pipeline log\n"]
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+        def wait(self):
+            return 0
+
+    def popen(command, **kwargs):
+        calls.append(command)
+        return Process()
+
     scope = {"Path": Path, "root": tmp_path, "sys": SimpleNamespace(executable="/colab/python313"),
-             "subprocess": SimpleNamespace(run=run, PIPE=-1, STDOUT=-2)}
+             "subprocess": SimpleNamespace(run=run, Popen=popen, PIPE=-1, STDOUT=-2)}
     assert "assert (3, 10)" not in cells[0]
     exec(compile(cells[1], "bootstrap-cell", "exec"), scope)
     assert scope["PIPELINE_PYTHON"] == str(tmp_path / ".colab-venv/bin/python")

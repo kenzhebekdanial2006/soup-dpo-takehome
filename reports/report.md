@@ -1,6 +1,6 @@
 # Soup DPO take-home — DON'T SHIP
 
-**Decision and run.** DON'T SHIP. Evidence directory: evidence/prepared; run status: PENDING_T4. Do not deploy this adapter. Synthetic heldout results cannot establish Russian customer-support quality. Missing evidence is UNRUN, never a pass.
+**Decision and run.** DON'T SHIP. Evidence directory: evidence/t4-20261002T200642Z; run status: FAILED. Do not deploy this adapter. Synthetic heldout results cannot establish Russian customer-support quality. Missing evidence is UNRUN, never a pass.
 
 **Recipe and data.** Qwen/Qwen2.5-1.5B-Instruct, immutable snapshot SHA recorded before training; Soup 0.75.2. T4/fp16; unquantized frozen base, streaming from RAM with 2 buffers, q_proj/v_proj LoRA r=8 alpha=16, AdamW, lr=5e-5, 1 epoch, pair batch 1, accumulation 4, max_length 512, seed 20260930. 500 template-defined fictional tickets authored with Codex: 400 train/100 heldout, grouped by scenario, 10 heldout groups. Shared policy/response templates remain a shortcut risk; no real tickets or independent labels.
 

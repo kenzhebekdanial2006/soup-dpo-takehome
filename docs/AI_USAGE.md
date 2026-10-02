@@ -30,3 +30,9 @@ managed base Python and triggering pip's externally-managed-environment error.
 The venv entry point is now preserved, checked before package installation, and
 covered by a Linux regression test. Retry logs are retained separately. These
 corrections do not establish a successful GPU training run.
+
+The first real T4 pipeline reached streamed/resident backward probing but failed
+while recording token lengths: the script expected older TRL field names.
+Both parity metadata and training guards now use the pinned TRL 0.29 schema,
+verified against its actual preference collator. The failed attempt's raw logs
+are retained. Colab pipeline output is now explicitly piped to the notebook.

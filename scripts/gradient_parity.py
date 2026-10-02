@@ -9,6 +9,7 @@ import argparse
 from pathlib import Path
 
 from scripts.common import read_jsonl, utc_now, write_json
+from scripts.dpo_data import prepared_lengths
 
 
 def main():
@@ -79,9 +80,7 @@ def main():
                                     "max_abs_error": abs_error, "relative_l2": relative_l2,
                                     "resident_norm": b.norm().item()})
             loss_close = abs(stream_loss - resident_loss) <= 2e-4 + 2e-3 * abs(resident_loss)
-            probes.append({"index": index, "prompt_tokens": len(item["prompt_input_ids"]),
-                           "chosen_tokens": len(item["chosen_input_ids"]),
-                           "rejected_tokens": len(item["rejected_input_ids"]),
+            probes.append({"index": index, **prepared_lengths(item),
                            "stream_loss": stream_loss, "resident_loss": resident_loss,
                            "loss_close": loss_close, "gradients": comparisons,
                            "passed": loss_close and all(c["passed"] for c in comparisons)})

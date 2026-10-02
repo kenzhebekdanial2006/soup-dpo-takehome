@@ -32,3 +32,9 @@ alone cannot validate backward.
 specifies 28 layers, hidden size 1536, intermediate size 8960, 12 attention heads,
 2 KV heads, vocabulary 151936 and tied embeddings. The local downloaded config
 and snapshot manifest are the run's authoritative evidence.
+
+The prepared text dataset in [TRL 0.29's preference collator](https://github.com/huggingface/trl/blob/v0.29.0/trl/trainer/dpo_trainer.py)
+uses `prompt_ids`, `chosen_ids`, and `rejected_ids`. Earlier `_input_ids` field
+assumptions caused the first T4 parity probe to fail during metadata collection.
+Token-length checks now use the pinned schema and are checked against the actual
+collator's attention and completion masks. The failed run remains in evidence.

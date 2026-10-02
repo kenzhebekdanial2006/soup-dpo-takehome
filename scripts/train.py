@@ -5,6 +5,7 @@ import argparse
 from pathlib import Path
 
 from scripts.common import read_jsonl, sha256, utc_now, write_json, write_jsonl
+from scripts.dpo_data import prepared_lengths
 
 
 def main():
@@ -60,10 +61,9 @@ def main():
         raise RuntimeError("No active layer-streaming runtime")
     prepared = trainer.train_dataset
     for row in prepared:
-        if len(row["prompt_input_ids"]) + max(len(row["chosen_input_ids"]), len(row["rejected_input_ids"])) > cfg.data.max_length:
+        lengths = prepared_lengths(row)
+        if lengths["prompt_tokens"] + max(lengths["chosen_tokens"], lengths["rejected_tokens"]) > cfg.data.max_length:
             raise RuntimeError("Prepared TRL dataset exceeds max_length")
-        if not row["chosen_input_ids"] or not row["rejected_input_ids"]:
-            raise RuntimeError("Prepared TRL completion is empty")
     write_json(evidence / "pre_training.json", {
         "timestamp": utc_now(), "initial_adapter_sha256": sha256(initial_dir / "adapter_model.safetensors"),
         "trainable_count": sum(p.numel() for _, p in trainable),
