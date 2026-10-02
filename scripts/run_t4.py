@@ -22,6 +22,8 @@ def run_command(command, directory, name, allowed=(0,)):
     stamped = directory / f"{name}.timestamped.log"
     env = dict(os.environ, PYTHONUNBUFFERED="1", PYTHONIOENCODING="utf-8",
                WANDB_DISABLED="true", HF_HUB_DISABLE_TELEMETRY="1", TOKENIZERS_PARALLELISM="false")
+    # Invoking a venv Python directly does not activate its CLI entry points.
+    env["PATH"] = str(Path(sys.executable).parent) + os.pathsep + env.get("PATH", "")
     with raw.open("wb") as raw_handle, stamped.open("w", encoding="utf-8") as stamp_handle:
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env)
         for line in iter(process.stdout.readline, b""):
