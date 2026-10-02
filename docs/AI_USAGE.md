@@ -22,3 +22,11 @@ T4 evidence, then add a short factual note below about what they accepted,
 changed, reran or disagreed with. Do not pre-write answers for the live interview.
 
 Applicant's independent review: **not yet recorded**.
+
+Colab bootstrap corrections: the first recipe assumed a Python <=3.12 notebook
+kernel. It was replaced with an isolated Python 3.11 environment. The subsequent
+recipe incorrectly resolved the Linux venv interpreter symlink, launching uv's
+managed base Python and triggering pip's externally-managed-environment error.
+The venv entry point is now preserved, checked before package installation, and
+covered by a Linux regression test. Retry logs are retained separately. These
+corrections do not establish a successful GPU training run.

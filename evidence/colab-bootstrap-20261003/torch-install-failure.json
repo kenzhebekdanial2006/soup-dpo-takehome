@@ -1,0 +1,12 @@
+{
+  "status": "FAILED_BEFORE_TRAINING",
+  "stage": "colab-install-torch",
+  "source": "User traceback and Windows UI Automation text from the open Colab page. This is a diagnostic record, not the original subprocess raw log.",
+  "error": "error: externally-managed-environment",
+  "message": "This Python installation is managed by uv and should not be modified.",
+  "python_installed": "CPython 3.11.14",
+  "cause": "Path.resolve() dereferenced .colab-venv/bin/python to uv's managed base interpreter, losing virtual environment context.",
+  "training_performed": false,
+  "fix": "Invoke the literal venv interpreter path, check sys.prefix != sys.base_prefix before installing packages, and keep retry logs in separate directories.",
+  "local_validation": "Ruff passed; 8 tests passed and 6 skipped on Windows. The new real Linux symlink regression test runs in GitHub Actions; ML tests require torch locally. Successful Colab execution is still pending."
+}

@@ -23,9 +23,14 @@ The run records errors and downloads a result ZIP even after failure.
 Save the executed notebook with outputs too. A successful run does not imply SHIP.
 The source ZIP is excluded from the returned archive; model cache is never exported.
 """),
-        cell("code", """import os, sys, subprocess, zipfile
+        cell("code", """import os
+import subprocess
+import sys
+import zipfile
 from pathlib import Path
+
 from google.colab import files
+
 print('Colab notebook kernel:', sys.version)
 uploaded = files.upload()
 assert len(uploaded) == 1, 'Upload only soup-dpo-takehome.zip'
@@ -42,17 +47,26 @@ assert Path('scripts/run_t4.py').exists()
 print('Project:', root)
 """),
         cell("code", """# Colab's notebook kernel can be Python 3.13; Soup runs in isolated Python 3.11.
-Path('evidence').mkdir(exist_ok=True)
+import time
+
+bootstrap_evidence = Path('evidence') / f'bootstrap-{time.time_ns()}'
+bootstrap_evidence.mkdir(parents=True)
 def bootstrap(command, name):
     completed = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    Path(f'evidence/{name}.raw.log').write_bytes(completed.stdout)
+    (bootstrap_evidence / f'{name}.raw.log').write_bytes(completed.stdout)
     print(completed.stdout.decode('utf-8', errors='replace'), flush=True)
     if completed.returncode:
         raise RuntimeError(f'{name} failed (exit {completed.returncode}); raw log retained.')
 bootstrap([sys.executable, '-m', 'pip', 'install', 'uv==0.9.3'], 'colab-install-uv')
 bootstrap([sys.executable, '-m', 'uv', 'python', 'install', '3.11'], 'colab-install-python')
-bootstrap([sys.executable, '-m', 'uv', 'venv', '--python', '3.11', '--seed', '.colab-venv'], 'colab-create-venv')
-PIPELINE_PYTHON = str((root / '.colab-venv/bin/python').resolve())
+if not (root / '.colab-venv/bin/python').exists():
+    bootstrap([sys.executable, '-m', 'uv', 'venv', '--python', '3.11', '--seed', '.colab-venv'], 'colab-create-venv')
+# Keep the venv entry point: resolving its symlink launches uv's managed base Python.
+PIPELINE_PYTHON = str(root / '.colab-venv/bin/python')
+bootstrap([PIPELINE_PYTHON, '-c',
+           'import sys; print(sys.executable, sys.prefix, sys.base_prefix); '
+           'assert sys.version_info[:2] == (3, 11), "Expected Python 3.11"; '
+           'assert sys.prefix != sys.base_prefix, "Expected virtual environment"'], 'colab-check-venv')
 bootstrap([PIPELINE_PYTHON, '-m', 'pip', 'install', 'torch==2.6.0+cu124',
            '--extra-index-url', 'https://download.pytorch.org/whl/cu124'], 'colab-install-torch')
 bootstrap([PIPELINE_PYTHON, '-m', 'pip', 'install', '-r', 'requirements.txt',
@@ -67,6 +81,7 @@ print('Pipeline exit code:', result.returncode)
 print('All available logs and failure evidence are retained.')
 """),
         cell("code", """import json
+
 latest_path = Path('evidence/latest_run.json')
 if latest_path.exists():
     latest = json.loads(latest_path.read_text())
