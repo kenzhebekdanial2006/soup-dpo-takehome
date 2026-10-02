@@ -1,0 +1,7 @@
+# Soup version reviewed at git commit 3966ef95cead56f500a67b1f68cbc84d22b11cfb.
+# Record the actual resolved stack in every run's pip-freeze.txt.
+soup-cli[train]==0.75.2
+pytest>=8,<10
+reportlab>=4,<6
+pypdf>=5,<7
+ruff>=0.12,<1

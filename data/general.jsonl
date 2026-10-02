@@ -1,0 +1,4 @@
+{"id": "arithmetic-1", "prompt": [{"role": "user", "content": "Сколько будет 2+2? Ответьте только числом."}], "chosen": [{"role": "assistant", "content": "4"}], "rejected": [{"role": "assistant", "content": "5"}], "group": "arithmetic-1"}
+{"id": "arithmetic-2", "prompt": [{"role": "user", "content": "Сколько будет 3*3? Ответьте только числом."}], "chosen": [{"role": "assistant", "content": "9"}], "rejected": [{"role": "assistant", "content": "8"}], "group": "arithmetic-2"}
+{"id": "geography", "prompt": [{"role": "user", "content": "Назовите столицу Франции одним словом."}], "chosen": [{"role": "assistant", "content": "Париж"}], "rejected": [{"role": "assistant", "content": "Лондон"}], "group": "geography"}
+{"id": "format", "prompt": [{"role": "user", "content": "Верните JSON без пояснений: ключ ok со значением true."}], "chosen": [{"role": "assistant", "content": "{\"ok\":true}"}], "rejected": [{"role": "assistant", "content": "ok это true"}], "group": "format"}

@@ -1,0 +1,33 @@
+base: ./models/base
+backend: transformers
+task: dpo
+data:
+  train: ./data/train.jsonl
+  format: dpo
+  val_split: 0.0
+  max_length: 512
+training:
+  epochs: 1
+  lr: 0.00005
+  dpo_beta: 0.1
+  batch_size: 1
+  gradient_accumulation_steps: 4
+  seed: 20260930
+  data_seed: 20260930
+  quantization: none
+  stream_layers: true
+  stream_source: ram
+  stream_buffers: 2
+  gradient_checkpointing: full
+  optimizer: adamw_torch
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  logging_steps: 1
+  save_steps: 50
+  lora:
+    r: 8
+    alpha: 16
+    dropout: 0.0
+    target_modules: [q_proj, v_proj]
+output: ./outputs/adapter

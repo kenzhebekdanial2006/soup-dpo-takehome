@@ -1,0 +1,20 @@
+{
+  "source": "Template-defined synthetic mock authored with Codex; no real tickets or LLM judge",
+  "seed": 20260930,
+  "rows": 500,
+  "train": 400,
+  "heldout": 100,
+  "independent_heldout_groups": 10,
+  "split_rule": "Hold out context index 4 in every intent; all paraphrases stay together",
+  "limitations": [
+    "Shared response/policy templates across split; severe shortcut risk",
+    "Artificial correctness labels; no human independent annotation",
+    "Ten heldout groups are too few to justify shipping to real customers"
+  ],
+  "sha256": {
+    "all.jsonl": "aba47ef0dd67eea154ff64df383d0e9ba149ca9a5891453fb25b351cdad4a880",
+    "train.jsonl": "d2824fdd455e86804c8b78949c3a8cb7878cf1fcbdf584486e7901164093cd31",
+    "heldout.jsonl": "5e621d2e4f5b5d0a07097b17dbb0782374f201fec1a33125a3fb8912d7519e34",
+    "general.jsonl": "e440afdec146fe0100a70c639eb497c107f8ef45050d4e83e73b158830f11e6d"
+  }
+}

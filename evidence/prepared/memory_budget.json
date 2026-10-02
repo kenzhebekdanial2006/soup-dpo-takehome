@@ -1,0 +1,49 @@
+{
+  "kind": "PRE-RUN ESTIMATE; not measured",
+  "units": "bytes; GiB = bytes / 2**30",
+  "shape": {
+    "S": 512,
+    "pair_batch": 1,
+    "forward_rows": 2,
+    "h": 1536,
+    "i": 8960,
+    "layers": 28,
+    "vocab": 151936
+  },
+  "base_parameters": 1543714304,
+  "lora_parameters": 1089536,
+  "base_resident_fp16_bytes": 3087428608,
+  "host_decoder_store_fp16_bytes": 2620678144,
+  "components": {
+    "decoder_pool": 187191296,
+    "embedding_or_large_vocab_slot": 466747392,
+    "final_norm": 3072,
+    "adapter_weights_fp32": 4358144,
+    "adapter_gradients_fp32": 4358144,
+    "adam_m_and_v_fp32": 8716288,
+    "frozen_reference_adapter_fp32_allowance": 4358144,
+    "checkpoint_boundary_activations": 88080384,
+    "one_recomputed_layer_intermediates": 80216064,
+    "policy_logits_fp16": 311164928,
+    "policy_logsoftmax_and_backward_fp32_planning_allowance": 1866989568,
+    "reference_logit_peak_allowance": 933494784,
+    "cuda_context_workspace_fragmentation_allowance": 1073741824
+  },
+  "planned_peak_upper_bytes": 4095925248,
+  "planned_peak_upper_GiB": 3.8146276473999023,
+  "assumptions": [
+    "Unquantized fp16 frozen base; T4 sm75 has no native bf16; adapters FP32",
+    "28 layers, tied embedding/head for chosen Qwen; exactly q_proj/v_proj rank 8",
+    "Two decoder buffers and one tied resident embedding matrix; no full base on GPU",
+    "Reference uses adapter disabled or frozen initial ref adapter, no second base model",
+    "Budget includes one extra frozen FP32 reference adapter (no gradient/Adam states)",
+    "Reference passes may overlap policy activations: counted activation common plus max logits",
+    "Adam states only for LoRA; no frozen-weight optimizer states; accumulation does not multiply batch",
+    "14 bytes/logit is a conservative allowance, not an independently measured DPO constant",
+    "SDPA, use_cache=false; a fallback to eager attention adds quadratic storage",
+    "Host memory also needs download/sharding staging and Python overhead; store size is not host peak"
+  ],
+  "timestamp": "2026-10-02T18:17:09.429+00:00",
+  "model_config_path": "config/model_shape_expected.json",
+  "model_config_sha256": "a5a755f7e9123fd3a28b11294c8f289f01f0176d88c85070a2dc05977d404763"
+}

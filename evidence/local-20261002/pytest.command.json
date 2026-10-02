@@ -1,0 +1,17 @@
+{
+  "started": "2026-10-02T18:18:20.295+00:00",
+  "argv": [
+    "C:\\Users\\igrym\\Desktop\\tz\\soup-dpo-takehome\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-rs"
+  ],
+  "finished": "2026-10-02T18:18:23.650+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0
+  ],
+  "raw_log_sha256": "680fb4e9071cf6995f723c17cc9216b43131cce06c433d214247f926a244f41f",
+  "passed": true
+}
