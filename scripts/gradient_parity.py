@@ -22,9 +22,18 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="config/soup.yaml")
     parser.add_argument("--output", required=True)
+    parser.add_argument("--strict-reductions", action="store_true", help="Diagnostic: disable fp16 GEMM reduced-precision reductions")
+    parser.add_argument("--deterministic-math", action="store_true", help="Diagnostic: use deterministic math attention and GEMM")
     args = parser.parse_args()
+    precision = None
+    if args.deterministic_math:
+        from scripts.precision import configure_deterministic_math
+
+        precision = configure_deterministic_math()
     if not torch.cuda.is_available() or "T4" not in torch.cuda.get_device_name(0):
         raise RuntimeError("This parity evidence must be collected on T4")
+    if args.strict_reductions:
+        torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = False
     cfg = load_config(args.config)
     streamed = DPOTrainerWrapper(cfg, device="cuda", report_to="none")
     resident_cfg = cfg.model_copy(deep=True)
@@ -53,7 +62,7 @@ def main():
             batch = streamed.trainer.data_collator([item])
             batch = {k: v.to("cuda") if hasattr(v, "to") else v for k, v in batch.items()}
             outputs = []
-            for wrapper in [streamed, resident]:
+            for wrapper in [streamed, resident, resident]:
                 wrapper.model.zero_grad(set_to_none=True)
                 with torch.autocast("cuda", dtype=torch.float16):
                     loss = wrapper.trainer.compute_loss(wrapper.model, dict(batch))
@@ -65,7 +74,7 @@ def main():
                             raise RuntimeError(f"Missing/nonfinite gradient {name}")
                         grads[name] = parameter.grad.detach().float().cpu().clone()
                 outputs.append((loss.detach().float().item(), grads))
-            (stream_loss, sg), (resident_loss, rg) = outputs
+            (stream_loss, sg), (resident_loss, rg), (repeat_loss, repeat_grads) = outputs
             if set(sg) != set(rg):
                 raise RuntimeError("Streamed/resident trainable key mismatch")
             comparisons = []
@@ -73,20 +82,26 @@ def main():
                 a, b = sg[key], rg[key]
                 abs_error = (a - b).abs().max().item()
                 relative_l2 = (a - b).norm().item() / max(b.norm().item(), 1e-12)
+                repeat_error = (b - repeat_grads[key]).norm().item() / max(b.norm().item(), 1e-12)
                 close = torch.allclose(a, b, rtol=1e-2, atol=1e-6)
                 if b.norm().item() > 1e-7:
                     close = close and relative_l2 <= 0.01
                 comparisons.append({"key": key, "passed": bool(close),
                                     "max_abs_error": abs_error, "relative_l2": relative_l2,
+                                    "resident_repeat_relative_l2": repeat_error,
                                     "resident_norm": b.norm().item()})
             loss_close = abs(stream_loss - resident_loss) <= 2e-4 + 2e-3 * abs(resident_loss)
             probes.append({"index": index, **prepared_lengths(item),
                            "stream_loss": stream_loss, "resident_loss": resident_loss,
+                           "resident_repeat_loss": repeat_loss,
                            "loss_close": loss_close, "gradients": comparisons,
                            "passed": loss_close and all(c["passed"] for c in comparisons)})
         result = {"timestamp": utc_now(), "passed": all(p["passed"] for p in probes),
                   "gpu": torch.cuda.get_device_name(0), "probes": probes,
                   "quantization": cfg.training.quantization,
+                  "fp16_reduced_precision_reduction": torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction,
+                  "resident_hf_gradient_checkpointing_kwargs": resident.trainer.args.gradient_checkpointing_kwargs,
+                  "precision": precision,
                   "tolerances": {"gradient_rtol": 0.01, "gradient_atol": 1e-6,
                                  "loss_rtol": 0.002, "loss_atol": 2e-4},
                   "scope": "Three real DPO batches, nonzero B, this base/config/stack/T4 only",

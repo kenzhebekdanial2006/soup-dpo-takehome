@@ -1,0 +1,46 @@
+Loading tokenizer: ./models/base
+╭────────────────────── Layer streaming disk pre-flight ───────────────────────╮
+│ HF/local source: 3.09 GB                                                     │
+│ Soup materialized copy: 0.00 GB (no write required)                          │
+│ Layer-shard cache: 3.09 GB (reusable)                                        │
+│ Projected total on disk: 6.17 GB                                             │
+│ Additional writes before training: 0.00 GB                                   │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Preparing layer shards -> /root/.soup/layer-stream/models__base
+╭─────────────────────────── training.stream_layers ───────────────────────────╮
+│ Layer streaming BETA — arch qwen2, tier ram                                  │
+│   base store   2.62 GB across 28 layers (pinned)                             │
+│   VRAM buffers 2 x 94 MB + 1 x 0 MB large-layer slot = 187 MB                │
+│   resident     467 MB extras + adapters                                      │
+│   peak VRAM    ~3.00 GB at batch 1 x seq 512 (2 rows — chosen+rejected are   │
+│ one concatenated tensor) (logits 2.18 GB)                                    │
+│   free VRAM    15.51 GB                                                      │
+│   forecast     1610-2367 tok/s — a compute-bound bound, not a promise        │
+│                (from 21.92 TFLOPS measured on this card now using float16 @  │
+│ 1260 MHz)                                                                    │
+│   ! accumulating 4x at batch 1: the base is re-read once per micro-batch.    │
+│ Per token that is free, but reaching effective batch 4 by raising            │
+│ training.batch_size instead measured ~2.5x faster. Accumulation holds peak   │
+│ VRAM flat, so raise batch_size while the budget above allows, then           │
+│ accumulate for the rest.                                                     │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Layer streaming is BETA: slower than resident training, but this model may not 
+run resident on this card at all.
+expandable_segments allocator hint not enabled: CUDA was already initialised 
+before Soup could set it — the allocator reads PYTORCH_CUDA_ALLOC_CONF once, at 
+context creation
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Layer streaming ready: 28 layers, 2.62 GB pinned RAM store, 2 x 94 MB decoder 
+buffers + 1 x 0 MB large-layer slot
+LoRA applied: 1,089,536 trainable / 1,543,714,304 total (0.07%)
+Tokenizing train dataset:   0%|          | 0/3 [00:00<?, ? examples/s]Tokenizing train dataset: 100%|██████████| 3/3 [00:00<00:00, 56.92 examples/s]
+[transformers] The model is already on multiple devices. Skipping the move to device specified in `args`.
+Map:   0%|          | 0/3 [00:00<?, ? examples/s]Map: 100%|██████████| 3/3 [00:00<00:00, 449.52 examples/s]
+Loading tokenizer: ./models/base
+Loading model: ./models/base
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   0%|          | 1/338 [00:03<21:36,  3.85s/it]Loading weights:  19%|█▉        | 65/338 [00:04<00:12, 22.66it/s]Loading weights:  26%|██▋       | 89/338 [00:04<00:09, 25.74it/s]Loading weights:  31%|███       | 104/338 [00:05<00:08, 28.02it/s]Loading weights:  34%|███▍      | 115/338 [00:05<00:07, 29.25it/s]Loading weights:  36%|███▋      | 123/338 [00:05<00:07, 29.98it/s]Loading weights:  38%|███▊      | 130/338 [00:05<00:06, 30.41it/s]Loading weights:  40%|████      | 136/338 [00:06<00:06, 30.27it/s]Loading weights:  43%|████▎     | 147/338 [00:06<00:06, 31.35it/s]Loading weights:  45%|████▍     | 152/338 [00:06<00:06, 27.96it/s]Loading weights:  47%|████▋     | 159/338 [00:06<00:05, 32.28it/s]Loading weights:  49%|████▊     | 164/338 [00:07<00:06, 28.74it/s]Loading weights:  51%|█████     | 171/338 [00:07<00:05, 28.93it/s]Loading weights:  52%|█████▏    | 175/338 [00:07<00:06, 27.14it/s]Loading weights:  54%|█████▍    | 184/338 [00:07<00:05, 30.76it/s]Loading weights:  56%|█████▌    | 188/338 [00:07<00:04, 30.80it/s]Loading weights:  58%|█████▊    | 195/338 [00:08<00:04, 29.11it/s]Loading weights:  59%|█████▉    | 199/338 [00:08<00:05, 24.25it/s]Loading weights:  61%|██████    | 207/338 [00:08<00:04, 32.54it/s]Loading weights:  63%|██████▎   | 212/338 [00:08<00:04, 27.27it/s]Loading weights:  65%|██████▍   | 219/338 [00:08<00:04, 27.14it/s]Loading weights:  66%|██████▌   | 223/338 [00:09<00:04, 24.80it/s]Loading weights:  69%|██████▊   | 232/338 [00:09<00:03, 33.18it/s]Loading weights:  72%|███████▏  | 243/338 [00:09<00:02, 31.91it/s]Loading weights:  73%|███████▎  | 247/338 [00:09<00:02, 31.72it/s]Loading weights:  75%|███████▌  | 255/338 [00:09<00:02, 36.41it/s]Loading weights:  77%|███████▋  | 259/338 [00:10<00:02, 28.83it/s]Loading weights:  79%|███████▉  | 267/338 [00:10<00:02, 27.28it/s]Loading weights:  80%|████████  | 271/338 [00:10<00:02, 24.94it/s]Loading weights:  83%|████████▎ | 279/338 [00:10<00:01, 32.59it/s]Loading weights:  84%|████████▎ | 283/338 [00:11<00:01, 28.20it/s]Loading weights:  86%|████████▌ | 291/338 [00:11<00:01, 30.77it/s]Loading weights:  87%|████████▋ | 295/338 [00:11<00:01, 27.08it/s]Loading weights:  90%|████████▉ | 304/338 [00:11<00:01, 31.68it/s]Loading weights:  93%|█████████▎| 314/338 [00:11<00:00, 42.95it/s]Loading weights:  95%|█████████▍| 320/338 [00:12<00:00, 29.16it/s]Loading weights:  97%|█████████▋| 328/338 [00:12<00:00, 31.78it/s]Loading weights: 100%|██████████| 338/338 [00:12<00:00, 26.99it/s]
+LoRA applied: 1,089,536 trainable / 1,544,803,840 total (0.07%)
+Tokenizing train dataset:   0%|          | 0/3 [00:00<?, ? examples/s]Tokenizing train dataset: 100%|██████████| 3/3 [00:00<00:00, 241.73 examples/s]
+Map:   0%|          | 0/3 [00:00<?, ? examples/s]Map: 100%|██████████| 3/3 [00:00<00:00, 453.73 examples/s]
+{'passed': True, 'probes': 3, 'output': 'evidence/diagnostic-20261002T202625Z/gradient_parity_deterministic_math.json'}

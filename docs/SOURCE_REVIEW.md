@@ -38,3 +38,12 @@ uses `prompt_ids`, `chosen_ids`, and `rejected_ids`. Earlier `_input_ids` field
 assumptions caused the first T4 parity probe to fail during metadata collection.
 Token-length checks now use the pinned schema and are checked against the actual
 collator's attention and completion masks. The failed run remains in evidence.
+
+Real T4 kernel diagnostics are in `evidence/diagnostic-*`. With default attention,
+losses were identical but gradients disagreed; resident-repeat relative L2 noise
+was itself about 4–5%. Disabling reduced-precision fp16 GEMM reductions alone did
+not resolve this. Deterministic SDPA math and GEMM yielded bit-identical gradients
+for all 112 trainable tensors on three pairs, including resident repeats, at the
+original tolerances. This isolates a numerical confound in the original probe,
+not a proven streaming-backward defect. The same settings now govern training
+and scoring. Coverage remains limited to this snapshot, batch shape and stack.

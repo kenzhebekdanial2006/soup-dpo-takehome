@@ -1,0 +1,49 @@
+2026-10-02T20:14:55.937+00:00 {
+2026-10-02T20:14:55.938+00:00   "kind": "PRE-RUN ESTIMATE; not measured",
+2026-10-02T20:14:55.938+00:00   "units": "bytes; GiB = bytes / 2**30",
+2026-10-02T20:14:55.938+00:00   "shape": {
+2026-10-02T20:14:55.938+00:00     "S": 512,
+2026-10-02T20:14:55.938+00:00     "pair_batch": 1,
+2026-10-02T20:14:55.938+00:00     "forward_rows": 2,
+2026-10-02T20:14:55.938+00:00     "h": 1536,
+2026-10-02T20:14:55.938+00:00     "i": 8960,
+2026-10-02T20:14:55.938+00:00     "layers": 28,
+2026-10-02T20:14:55.938+00:00     "vocab": 151936
+2026-10-02T20:14:55.938+00:00   },
+2026-10-02T20:14:55.938+00:00   "base_parameters": 1543714304,
+2026-10-02T20:14:55.938+00:00   "lora_parameters": 1089536,
+2026-10-02T20:14:55.938+00:00   "base_resident_fp16_bytes": 3087428608,
+2026-10-02T20:14:55.938+00:00   "host_decoder_store_fp16_bytes": 2620678144,
+2026-10-02T20:14:55.938+00:00   "components": {
+2026-10-02T20:14:55.938+00:00     "decoder_pool": 187191296,
+2026-10-02T20:14:55.938+00:00     "embedding_or_large_vocab_slot": 466747392,
+2026-10-02T20:14:55.938+00:00     "final_norm": 3072,
+2026-10-02T20:14:55.938+00:00     "adapter_weights_fp32": 4358144,
+2026-10-02T20:14:55.938+00:00     "adapter_gradients_fp32": 4358144,
+2026-10-02T20:14:55.938+00:00     "adam_m_and_v_fp32": 8716288,
+2026-10-02T20:14:55.938+00:00     "frozen_reference_adapter_fp32_allowance": 4358144,
+2026-10-02T20:14:55.938+00:00     "checkpoint_boundary_activations": 88080384,
+2026-10-02T20:14:55.938+00:00     "one_recomputed_layer_intermediates": 80216064,
+2026-10-02T20:14:55.938+00:00     "policy_logits_fp16": 311164928,
+2026-10-02T20:14:55.938+00:00     "policy_logsoftmax_and_backward_fp32_planning_allowance": 1866989568,
+2026-10-02T20:14:55.938+00:00     "reference_logit_peak_allowance": 933494784,
+2026-10-02T20:14:55.938+00:00     "cuda_context_workspace_fragmentation_allowance": 1073741824
+2026-10-02T20:14:55.939+00:00   },
+2026-10-02T20:14:55.939+00:00   "planned_peak_upper_bytes": 4095925248,
+2026-10-02T20:14:55.939+00:00   "planned_peak_upper_GiB": 3.8146276473999023,
+2026-10-02T20:14:55.939+00:00   "assumptions": [
+2026-10-02T20:14:55.939+00:00     "Unquantized fp16 frozen base; T4 sm75 has no native bf16; adapters FP32",
+2026-10-02T20:14:55.939+00:00     "28 layers, tied embedding/head for chosen Qwen; exactly q_proj/v_proj rank 8",
+2026-10-02T20:14:55.939+00:00     "Two decoder buffers and one tied resident embedding matrix; no full base on GPU",
+2026-10-02T20:14:55.939+00:00     "Reference uses adapter disabled or frozen initial ref adapter, no second base model",
+2026-10-02T20:14:55.939+00:00     "Budget includes one extra frozen FP32 reference adapter (no gradient/Adam states)",
+2026-10-02T20:14:55.939+00:00     "Reference passes may overlap policy activations: counted activation common plus max logits",
+2026-10-02T20:14:55.939+00:00     "Adam states only for LoRA; no frozen-weight optimizer states; accumulation does not multiply batch",
+2026-10-02T20:14:55.939+00:00     "14 bytes/logit is a conservative allowance, not an independently measured DPO constant",
+2026-10-02T20:14:55.939+00:00     "SDPA, use_cache=false; a fallback to eager attention adds quadratic storage",
+2026-10-02T20:14:55.939+00:00     "Host memory also needs download/sharding staging and Python overhead; store size is not host peak"
+2026-10-02T20:14:55.939+00:00   ],
+2026-10-02T20:14:55.939+00:00   "timestamp": "2026-10-02T20:14:55.935+00:00",
+2026-10-02T20:14:55.939+00:00   "model_config_path": "models/base/config.json",
+2026-10-02T20:14:55.939+00:00   "model_config_sha256": "98d2ff8cc47488d08a2b0b3acf4eb99ef210779b42bd48605f6b8e36acdbf670"
+2026-10-02T20:14:55.939+00:00 }

@@ -41,7 +41,7 @@ def create_report(directory):
                    "Do not deploy this adapter. Synthetic heldout results cannot establish Russian customer-support quality. "
                    "Missing evidence is UNRUN, never a pass."))
     report.append(("Recipe and data", "Qwen/Qwen2.5-1.5B-Instruct, immutable snapshot SHA recorded before training; Soup 0.75.2. "
-                   "T4/fp16; unquantized frozen base, streaming from RAM with 2 buffers, q_proj/v_proj LoRA r=8 alpha=16, "
+                   "T4/fp16, deterministic SDPA math; unquantized frozen base, streaming from RAM with 2 buffers, q_proj/v_proj LoRA r=8 alpha=16, "
                    "AdamW, lr=5e-5, 1 epoch, pair batch 1, accumulation 4, max_length 512, seed 20260930. "
                    "500 template-defined fictional tickets authored with Codex: 400 train/100 heldout, grouped by scenario, 10 heldout groups. "
                    "Shared policy/response templates remain a shortcut risk; no real tickets or independent labels."))
@@ -100,10 +100,20 @@ def create_report(directory):
     outcome += "scenario separation; manually inspect generated replies and safety errors; run broader Russian/general regression tests and seeds; "
     outcome += "resolve every MAJOR diagnostic. Package this run's weights with its snapshot/config/data hashes. No failed run is removed."
     report.append(("Verdict and required changes", outcome))
-    report.append(("Surprise and remaining concern", "The most surprising source finding was that identical forward/loss values can coexist with "
+    surprise = ("The most surprising source finding was that identical forward/loss values can coexist with "
                    "wrong backward gradients, and that a healthy training adapter can become inert when saved with wrapper-specific keys. "
                    "This is a source-review observation, not an experience claimed from an unrun experiment. My main concern is whether the "
-                   "synthetic task rewards reusable phrasing instead of useful support behavior; neither loss nor four general probes can settle that."))
+                   "synthetic task rewards reusable phrasing instead of useful support behavior; neither loss nor four general probes can settle that.")
+    math_diagnostics = [read(path.parent, path.name) for path in directory.parent.glob("diagnostic-*/gradient_parity_deterministic_math.json")]
+    if any(result["passed"] and all(g["max_abs_error"] == 0 and g["resident_repeat_relative_l2"] == 0
+                                    for probe in result["probes"] for g in probe["gradients"])
+           for result in math_diagnostics):
+        surprise = ("Default-attention T4 probes had identical losses but disagreeing gradients; even resident repeats varied. "
+                    "Disabling fp16 GEMM reductions alone did not resolve this. Deterministic SDPA math made all 112 gradients "
+                    "bit-identical on three batches, without relaxing tolerances. This numerical variability confounded the original "
+                    "streaming test; it did not establish a streaming defect. My remaining concern is that shared synthetic templates "
+                    "reward phrasing instead of real support quality; neither loss nor four general probes can settle that.")
+    report.append(("Surprise and remaining concern", surprise))
     report.append(("AI assistance", "Codex prepared the dataset templates, implementation, documentation and source analysis. Accepted suggestions: "
                    "immutable base snapshot, actual initialization comparison, ordinary PEFT reload, lr=0 negative control and backward parity. "
                    "Corrected by checking source: doctor rejects DPO pairs; use lint plus chat projection; T4 precision is fp16; never report pending "

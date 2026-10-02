@@ -1,0 +1,17 @@
+{
+  "started": "2026-10-02T20:15:26.706+00:00",
+  "argv": [
+    "soup",
+    "train",
+    "--config",
+    "config/soup.yaml",
+    "--dry-run"
+  ],
+  "finished": "2026-10-02T20:15:29.325+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0
+  ],
+  "raw_log_sha256": "d08a8334731345fca61a6f9479997033e325d0e4f429e02a6aff19d07d950a85",
+  "passed": true
+}

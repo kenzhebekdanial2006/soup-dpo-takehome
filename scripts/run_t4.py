@@ -84,7 +84,7 @@ def main():
         ]:
             # data checks can report MAJOR (2); retain it and let report gate refuse shipping.
             run_command(command, directory, name, allowed=(0, 2) if "data-" in name else (0,))
-        run_command(py + ["scripts.gradient_parity", "--output", str(directory / "gradient_parity.json")], directory, "gradient-parity")
+        run_command(py + ["scripts.gradient_parity", "--deterministic-math", "--output", str(directory / "gradient_parity.json")], directory, "gradient-parity")
         control = directory / "control"
         run_command(py + ["scripts.train", "--control", "--evidence", str(control)], directory, "control-train")
         run_command(py + ["scripts.verify_training", "--initial", str(control / "initial_adapter"), "--adapter", "outputs/control_adapter", "--limit", "4", "--output", str(control / "verification.json")], directory, "control-verify", allowed=(2,))

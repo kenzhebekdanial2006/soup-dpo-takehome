@@ -6,6 +6,7 @@ from pathlib import Path
 
 from scripts.common import read_jsonl, sha256, utc_now, write_json, write_jsonl
 from scripts.dpo_data import prepared_lengths
+from scripts.precision import configure_deterministic_math
 
 
 def main():
@@ -19,6 +20,7 @@ def main():
     parser.add_argument("--evidence", required=True)
     parser.add_argument("--control", action="store_true", help="Two real DPO optimizer steps with lr=0")
     args = parser.parse_args()
+    precision = configure_deterministic_math()
     evidence = Path(args.evidence)
     evidence.mkdir(parents=True, exist_ok=True)
     if not torch.cuda.is_available():
@@ -36,6 +38,7 @@ def main():
         "capability": list(torch.cuda.get_device_capability(0)),
         "vram_bytes": torch.cuda.get_device_properties(0).total_memory,
         "torch": torch.__version__, "torch_cuda": torch.version.cuda,
+        "precision": precision,
         "config_sha256": sha256(args.config), "train_sha256": sha256("data/train.jsonl"),
     })
     torch.cuda.reset_peak_memory_stats()

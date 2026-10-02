@@ -1,0 +1,23 @@
+{
+  "started": "2026-10-02T20:15:20.261+00:00",
+  "argv": [
+    "soup",
+    "data",
+    "lint",
+    "data/train.jsonl",
+    "--model",
+    "models/base",
+    "--sample",
+    "400",
+    "--output",
+    "evidence/t4-20261002T201429Z/soup_data_lint.json"
+  ],
+  "finished": "2026-10-02T20:15:26.705+00:00",
+  "returncode": 0,
+  "accepted_exit_codes": [
+    0,
+    2
+  ],
+  "raw_log_sha256": "1ebe63726dd8a6563f9dc60d8a24db0825135353fa3dfa0decb8d87684834cc3",
+  "passed": true
+}

@@ -1,0 +1,25 @@
+                              soup data lint (dpo)                              
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Check           ┃ Verdict ┃ Message                ┃ Evidence                ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ length_bias     │ OK      │ effect size (Cohen's   │ mean chosen=59.6, mean  │
+│                 │         │ d) = -0.097 (rejected  │ rejected=60.0           │
+│                 │         │ longer than chosen);   │                         │
+│                 │         │ chosen is longer in    │                         │
+│                 │         │ 40.0% of rows          │                         │
+│ identical_pairs │ OK      │ 0/400 rows (0.0%) have │                         │
+│                 │         │ chosen == rejected     │                         │
+│                 │         │ (zero preference       │                         │
+│                 │         │ signal)                │                         │
+│ near_duplicates │ OK      │ near-dup check skipped │ pip install             │
+│                 │         │ (datasketch not        │ "soup-cli[data]" to     │
+│                 │         │ installed)             │ enable                  │
+│ prompt_leak     │ OK      │ 0/400 rows (0.0%) have │ min_prompt_len=40       │
+│                 │         │ the prompt echoed      │                         │
+│                 │         │ verbatim inside the    │                         │
+│                 │         │ completion             │                         │
+└─────────────────┴─────────┴────────────────────────┴─────────────────────────┘
+╭───────── overall ─────────╮
+│ OK — 400/400 rows scanned │
+╰───────────────────────────╯
+Wrote evidence/t4-20261002T201429Z/soup_data_lint.json

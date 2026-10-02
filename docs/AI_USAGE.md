@@ -36,3 +36,12 @@ while recording token lengths: the script expected older TRL field names.
 Both parity metadata and training guards now use the pinned TRL 0.29 schema,
 verified against its actual preference collator. The failed attempt's raw logs
 are retained. Colab pipeline output is now explicitly piped to the notebook.
+
+Actual T4 diagnostics then found gradient disagreement under default attention,
+with similar variation even between two resident repeats at identical loss.
+Disabling fp16 GEMM reduced-precision reductions alone did not resolve it.
+Deterministic SDPA math plus deterministic GEMM produced bit-identical gradients
+for all 112 trainable tensors on three real DPO batches and zero resident-repeat
+noise, using the original tolerances. The pipeline now uses those settings for
+parity, training and scoring. This does not establish a streaming defect, and
+the failed/default-kernel probes are retained alongside the passing diagnostic.

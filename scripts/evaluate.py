@@ -23,6 +23,9 @@ def summarize_groups(base, tuned):
 
 
 def main():
+    from scripts.precision import configure_deterministic_math
+
+    precision = configure_deterministic_math()
     import torch
     from peft import PeftModel
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -59,6 +62,7 @@ def main():
     write_json(evidence / "ship_evidence.json", ship_evidence)
     write_json(evidence / "evaluation.json", {
         "timestamp": utc_now(), **summary, "general_base": general_base,
+        "precision": precision,
         "general_tuned": general_tuned, "length_normalized_accuracy": {
             "base": verification["base_accuracy_mean"], "tuned": verification["tuned_accuracy_mean"]},
         "limitation": "Synthetic shared templates and 10 independent groups cannot establish real-ticket quality",

@@ -65,6 +65,9 @@ def functional_change(base, repeated_base, tuned):
 
 
 def main():
+    from scripts.precision import configure_deterministic_math
+
+    configure_deterministic_math()
     import torch
     from peft import PeftModel, get_peft_model_state_dict
     from safetensors.torch import load_file

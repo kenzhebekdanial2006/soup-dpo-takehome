@@ -1,0 +1,46 @@
+2026-10-02T20:26:34.480+00:00 Loading tokenizer: ./models/base
+2026-10-02T20:26:35.483+00:00 ╭────────────────────── Layer streaming disk pre-flight ───────────────────────╮
+2026-10-02T20:26:35.485+00:00 │ HF/local source: 3.09 GB                                                     │
+2026-10-02T20:26:35.489+00:00 │ Soup materialized copy: 0.00 GB (no write required)                          │
+2026-10-02T20:26:35.493+00:00 │ Layer-shard cache: 3.09 GB (reusable)                                        │
+2026-10-02T20:26:35.494+00:00 │ Projected total on disk: 6.17 GB                                             │
+2026-10-02T20:26:35.495+00:00 │ Additional writes before training: 0.00 GB                                   │
+2026-10-02T20:26:35.497+00:00 ╰──────────────────────────────────────────────────────────────────────────────╯
+2026-10-02T20:26:35.500+00:00 Preparing layer shards -> /root/.soup/layer-stream/models__base
+2026-10-02T20:26:36.715+00:00 ╭─────────────────────────── training.stream_layers ───────────────────────────╮
+2026-10-02T20:26:36.719+00:00 │ Layer streaming BETA — arch qwen2, tier ram                                  │
+2026-10-02T20:26:36.721+00:00 │   base store   2.62 GB across 28 layers (pinned)                             │
+2026-10-02T20:26:36.723+00:00 │   VRAM buffers 2 x 94 MB + 1 x 0 MB large-layer slot = 187 MB                │
+2026-10-02T20:26:36.725+00:00 │   resident     467 MB extras + adapters                                      │
+2026-10-02T20:26:36.727+00:00 │   peak VRAM    ~3.00 GB at batch 1 x seq 512 (2 rows — chosen+rejected are   │
+2026-10-02T20:26:36.728+00:00 │ one concatenated tensor) (logits 2.18 GB)                                    │
+2026-10-02T20:26:36.730+00:00 │   free VRAM    15.51 GB                                                      │
+2026-10-02T20:26:36.731+00:00 │   forecast     1610-2367 tok/s — a compute-bound bound, not a promise        │
+2026-10-02T20:26:36.732+00:00 │                (from 21.92 TFLOPS measured on this card now using float16 @  │
+2026-10-02T20:26:36.734+00:00 │ 1260 MHz)                                                                    │
+2026-10-02T20:26:36.736+00:00 │   ! accumulating 4x at batch 1: the base is re-read once per micro-batch.    │
+2026-10-02T20:26:36.738+00:00 │ Per token that is free, but reaching effective batch 4 by raising            │
+2026-10-02T20:26:36.740+00:00 │ training.batch_size instead measured ~2.5x faster. Accumulation holds peak   │
+2026-10-02T20:26:36.742+00:00 │ VRAM flat, so raise batch_size while the budget above allows, then           │
+2026-10-02T20:26:36.743+00:00 │ accumulate for the rest.                                                     │
+2026-10-02T20:26:36.745+00:00 ╰──────────────────────────────────────────────────────────────────────────────╯
+2026-10-02T20:26:36.746+00:00 Layer streaming is BETA: slower than resident training, but this model may not 
+2026-10-02T20:26:36.748+00:00 run resident on this card at all.
+2026-10-02T20:26:36.751+00:00 expandable_segments allocator hint not enabled: CUDA was already initialised 
+2026-10-02T20:26:36.753+00:00 before Soup could set it — the allocator reads PYTORCH_CUDA_ALLOC_CONF once, at 
+2026-10-02T20:26:36.755+00:00 context creation
+2026-10-02T20:26:36.756+00:00 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+2026-10-02T20:26:51.254+00:00 Layer streaming ready: 28 layers, 2.62 GB pinned RAM store, 2 x 94 MB decoder 
+2026-10-02T20:26:51.261+00:00 buffers + 1 x 0 MB large-layer slot
+2026-10-02T20:26:51.263+00:00 LoRA applied: 1,089,536 trainable / 1,543,714,304 total (0.07%)
+2026-10-02T20:26:53.334+00:00 Tokenizing train dataset:   0%|          | 0/3 [00:00<?, ? examples/s]Tokenizing train dataset: 100%|██████████| 3/3 [00:00<00:00, 56.92 examples/s]
+2026-10-02T20:26:53.343+00:00 [transformers] The model is already on multiple devices. Skipping the move to device specified in `args`.
+2026-10-02T20:26:53.359+00:00 Map:   0%|          | 0/3 [00:00<?, ? examples/s]Map: 100%|██████████| 3/3 [00:00<00:00, 449.52 examples/s]
+2026-10-02T20:26:53.379+00:00 Loading tokenizer: ./models/base
+2026-10-02T20:26:53.757+00:00 Loading model: ./models/base
+2026-10-02T20:26:53.759+00:00 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+2026-10-02T20:27:06.731+00:00 Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   0%|          | 1/338 [00:03<21:36,  3.85s/it]Loading weights:  19%|█▉        | 65/338 [00:04<00:12, 22.66it/s]Loading weights:  26%|██▋       | 89/338 [00:04<00:09, 25.74it/s]Loading weights:  31%|███       | 104/338 [00:05<00:08, 28.02it/s]Loading weights:  34%|███▍      | 115/338 [00:05<00:07, 29.25it/s]Loading weights:  36%|███▋      | 123/338 [00:05<00:07, 29.98it/s]Loading weights:  38%|███▊      | 130/338 [00:05<00:06, 30.41it/s]Loading weights:  40%|████      | 136/338 [00:06<00:06, 30.27it/s]Loading weights:  43%|████▎     | 147/338 [00:06<00:06, 31.35it/s]Loading weights:  45%|████▍     | 152/338 [00:06<00:06, 27.96it/s]Loading weights:  47%|████▋     | 159/338 [00:06<00:05, 32.28it/s]Loading weights:  49%|████▊     | 164/338 [00:07<00:06, 28.74it/s]Loading weights:  51%|█████     | 171/338 [00:07<00:05, 28.93it/s]Loading weights:  52%|█████▏    | 175/338 [00:07<00:06, 27.14it/s]Loading weights:  54%|█████▍    | 184/338 [00:07<00:05, 30.76it/s]Loading weights:  56%|█████▌    | 188/338 [00:07<00:04, 30.80it/s]Loading weights:  58%|█████▊    | 195/338 [00:08<00:04, 29.11it/s]Loading weights:  59%|█████▉    | 199/338 [00:08<00:05, 24.25it/s]Loading weights:  61%|██████    | 207/338 [00:08<00:04, 32.54it/s]Loading weights:  63%|██████▎   | 212/338 [00:08<00:04, 27.27it/s]Loading weights:  65%|██████▍   | 219/338 [00:08<00:04, 27.14it/s]Loading weights:  66%|██████▌   | 223/338 [00:09<00:04, 24.80it/s]Loading weights:  69%|██████▊   | 232/338 [00:09<00:03, 33.18it/s]Loading weights:  72%|███████▏  | 243/338 [00:09<00:02, 31.91it/s]Loading weights:  73%|███████▎  | 247/338 [00:09<00:02, 31.72it/s]Loading weights:  75%|███████▌  | 255/338 [00:09<00:02, 36.41it/s]Loading weights:  77%|███████▋  | 259/338 [00:10<00:02, 28.83it/s]Loading weights:  79%|███████▉  | 267/338 [00:10<00:02, 27.28it/s]Loading weights:  80%|████████  | 271/338 [00:10<00:02, 24.94it/s]Loading weights:  83%|████████▎ | 279/338 [00:10<00:01, 32.59it/s]Loading weights:  84%|████████▎ | 283/338 [00:11<00:01, 28.20it/s]Loading weights:  86%|████████▌ | 291/338 [00:11<00:01, 30.77it/s]Loading weights:  87%|████████▋ | 295/338 [00:11<00:01, 27.08it/s]Loading weights:  90%|████████▉ | 304/338 [00:11<00:01, 31.68it/s]Loading weights:  93%|█████████▎| 314/338 [00:11<00:00, 42.95it/s]Loading weights:  95%|█████████▍| 320/338 [00:12<00:00, 29.16it/s]Loading weights:  97%|█████████▋| 328/338 [00:12<00:00, 31.78it/s]Loading weights: 100%|██████████| 338/338 [00:12<00:00, 26.99it/s]
+2026-10-02T20:27:06.942+00:00 LoRA applied: 1,089,536 trainable / 1,544,803,840 total (0.07%)
+2026-10-02T20:27:08.620+00:00 Tokenizing train dataset:   0%|          | 0/3 [00:00<?, ? examples/s]Tokenizing train dataset: 100%|██████████| 3/3 [00:00<00:00, 241.73 examples/s]
+2026-10-02T20:27:08.644+00:00 Map:   0%|          | 0/3 [00:00<?, ? examples/s]Map: 100%|██████████| 3/3 [00:00<00:00, 453.73 examples/s]
+2026-10-02T20:27:16.909+00:00 {'passed': True, 'probes': 3, 'output': 'evidence/diagnostic-20261002T202625Z/gradient_parity_deterministic_math.json'}

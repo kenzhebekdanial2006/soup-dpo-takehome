@@ -1,0 +1,14 @@
+Loading config from config/soup.yaml...
+╭─────────────────────────────── Training Setup ───────────────────────────────╮
+│ Device:  Tesla T4                                                            │
+│ Memory:  14.6 GB                                                             │
+│ Model:   ./models/base                                                       │
+│ Task:    dpo                                                                 │
+│ Backend: transformers                                                        │
+│ LoRA:    r=8, alpha=16                                                       │
+│ Quant:   none                                                                │
+│ Seed:    20260930, data_seed=20260930                                        │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Dry run - validating data...
+Data OK: 400 train samples
+Config valid. Ready to train!

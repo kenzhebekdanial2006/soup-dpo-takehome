@@ -1,0 +1,8 @@
+{
+  "run": "t4-20261002T201429Z",
+  "started": "2026-10-02T20:14:29.371+00:00",
+  "status": "FAILED",
+  "completed": false,
+  "error": "RuntimeError: gradient-parity exited 1; raw log retained at evidence/t4-20261002T201429Z/gradient-parity.raw.log",
+  "finished": "2026-10-02T20:16:06.565+00:00"
+}
